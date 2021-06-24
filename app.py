@@ -25,6 +25,3 @@ def display_page(pathname):
     return html.Div([
         html.H3('You are on page {}'.format(pathname))
     ])
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
