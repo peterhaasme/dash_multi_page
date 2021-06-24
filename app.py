@@ -1,6 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -18,9 +19,16 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
-
-@app.callback(dash.dependencies.Output('page-content', 'children'),
-              [dash.dependencies.Input('url', 'pathname')])
+@app.callback(
+    Output(
+        component_id='page-content',
+        component_property='children',
+        ),
+    [Input(
+        component_id='url',
+        component_property='pathname',
+        )]
+)
 def display_page(pathname):
     return html.Div([
         html.H3('You are on page {}'.format(pathname))
