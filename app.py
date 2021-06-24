@@ -4,6 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 # Since we're adding callbacks to elements that don't exist in the app.layout,
 # Dash will raise an exception to warn us that we might be
 # doing something wrong.
@@ -28,7 +29,7 @@ app.layout = html.Div(
     ]
 )
 
-### Index page content ###
+### Index Page Layout ###
 index_page = html.Div(
     children=[
         dcc.Link(
