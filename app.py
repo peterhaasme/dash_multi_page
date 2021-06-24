@@ -3,21 +3,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
+### Dash instance ###
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-# Since we're adding callbacks to elements that don't exist in the app.layout,
-# Dash will raise an exception to warn us that we might be
-# doing something wrong.
-# In this case, we're adding the elements through a callback, so we can ignore
-# the exception.
 app = dash.Dash(
         __name__,
         external_stylesheets=external_stylesheets,
-        suppress_callback_exceptions=True,
         )
 
 ### Page container ###
-app.layout = html.Div(
+page_container = html.Div(
     children=[
         # represents the URL bar, doesn't render anything
         dcc.Location(
@@ -30,7 +24,7 @@ app.layout = html.Div(
 )
 
 ### Index Page Layout ###
-index_page = html.Div(
+index_layout = html.Div(
     children=[
         dcc.Link(
             children='Go to Page 1',
@@ -118,6 +112,19 @@ page_2_layout = html.Div(
 def page_2_radios(value):
     return 'You have selected "{}"'.format(value)
 
+### Set app layout to page container ###
+app.layout = page_container
+
+### Assemble all layouts ###
+app.validation_layout = html.Div(
+    children = [
+        page_container,
+        index_layout,
+        page_1_layout,
+        page_2_layout,
+    ]
+)
+
 ### Update Page Container ###
 @app.callback(
     Output(
@@ -130,9 +137,10 @@ def page_2_radios(value):
         )]
 )
 def display_page(pathname):
+    # add if index page
     if pathname == '/page-1':
         return page_1_layout
     elif pathname == '/page-2':
         return page_2_layout
     else:
-        return index_page
+        return index_layout
