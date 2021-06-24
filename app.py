@@ -4,20 +4,28 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app.layout = html.Div([
-    # represents the URL bar, doesn't render anything
-    dcc.Location(id='url', refresh=False),
-
-    dcc.Link('Navigate to "/"', href='/'),
-    html.Br(),
-    dcc.Link('Navigate to "/page-2"', href='/page-2'),
-
-    # content will be rendered in this element
-    html.Div(id='page-content')
-])
+app.layout = html.Div(
+    children=[
+        # represents the URL bar, doesn't render anything
+        dcc.Location(
+            id='url',
+            refresh=False,
+        ),
+        dcc.Link(
+            children='Navigate to "/"',
+            href='/',
+        ),
+        html.Br(),
+        dcc.Link(
+            children='Navigate to "/page-2"',
+            href='/page-2',
+        ),
+        # content will be rendered in this element
+        html.Div(id='page-content')
+    ]
+)
 
 @app.callback(
     Output(
