@@ -4,8 +4,18 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+# Since we're adding callbacks to elements that don't exist in the app.layout,
+# Dash will raise an exception to warn us that we might be
+# doing something wrong.
+# In this case, we're adding the elements through a callback, so we can ignore
+# the exception.
+app = dash.Dash(
+        __name__,
+        external_stylesheets=external_stylesheets,
+        suppress_callback_exceptions=True,
+        )
 
+### Page container ###
 app.layout = html.Div(
     children=[
         # represents the URL bar, doesn't render anything
@@ -13,20 +23,101 @@ app.layout = html.Div(
             id='url',
             refresh=False,
         ),
-        dcc.Link(
-            children='Navigate to "/"',
-            href='/',
-        ),
-        html.Br(),
-        dcc.Link(
-            children='Navigate to "/page-2"',
-            href='/page-2',
-        ),
         # content will be rendered in this element
         html.Div(id='page-content')
     ]
 )
 
+### Index page content ###
+index_page = html.Div(
+    children=[
+        dcc.Link(
+            children='Go to Page 1',
+            href='/page-1',
+        ),
+        html.Br(),
+        dcc.Link(
+            children='Go to Page 2',
+            href='/page-2',
+        ),
+    ]
+)
+
+### Page 1 Layout and Callback ###
+page_1_layout = html.Div(
+    children=[
+        html.H1(
+            children='Page 1',
+        ),
+        dcc.Dropdown(
+            id='page-1-dropdown',
+            options=[{'label': i, 'value': i} for i in ['LA', 'NYC', 'MTL']],
+            value='LA',
+        ),
+        html.Div(
+            id='page-1-content',
+        ),
+        html.Br(),
+        dcc.Link(
+            children='Go to Page 2',
+            href='/page-2',
+        ),
+        html.Br(),
+        dcc.Link('Go back to home', href='/'),
+    ]
+)
+
+@app.callback(
+    Output(
+        component_id='page-1-content',
+        component_property='children',
+    ),
+    [Input(
+        component_id='page-1-dropdown',
+        component_property='value',
+    )]
+)
+def page_1_dropdown(value):
+    return 'You have selected "{}"'.format(value)
+
+### Page 2 Layout and Callbacks ###
+page_2_layout = html.Div(
+    children=[
+        html.H1(
+            children='Page 2',
+        ),
+        dcc.RadioItems(
+            id='page-2-radios',
+            options=[{'label': i, 'value': i} for i in ['Orange', 'Blue', 'Red']],
+            value='Orange',
+        ),
+        html.Div(
+            id='page-2-content',
+        ),
+        html.Br(),
+        dcc.Link(
+            children='Go to Page 1',
+            href='/page-1',
+        ),
+        html.Br(),
+        dcc.Link('Go back to home', href='/')
+    ]
+)
+
+@app.callback(
+    Output(
+        component_id='page-2-content',
+        component_property='children',
+    ),
+    [Input(
+        component_id='page-2-radios',
+        component_property='value',
+    )]
+)
+def page_2_radios(value):
+    return 'You have selected "{}"'.format(value)
+
+### Update Page Container ###
 @app.callback(
     Output(
         component_id='page-content',
@@ -38,6 +129,9 @@ app.layout = html.Div(
         )]
 )
 def display_page(pathname):
-    return html.Div([
-        html.H3('You are on page {}'.format(pathname))
-    ])
+    if pathname == '/page-1':
+        return page_1_layout
+    elif pathname == '/page-2':
+        return page_2_layout
+    else:
+        return index_page
