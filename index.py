@@ -63,12 +63,14 @@ app.validation_layout = html.Div(
 )
 def display_page(pathname):
     # add if index page
-    if pathname == '/page-1':
+    if pathname == '/':
+        return index_layout
+    elif pathname == '/page-1':
         return page_1.layout
     elif pathname == '/page-2':
         return page_2.layout
     else:
-        return index_layout
+        return '404'
 
 if __name__ == '__main__':
     app.run_server(debug=True)
