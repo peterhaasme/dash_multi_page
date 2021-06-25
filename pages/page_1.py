@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output
 from app import app
 
 ### Page 1 Layout and Callback ###
-page_1_layout = html.Div(
+layout = html.Div(
     children=[
         html.H1(
             children='Page 1',
