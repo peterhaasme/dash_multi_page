@@ -22,6 +22,9 @@ page_container = html.Div(
     ]
 )
 
+### Set app layout to page container ###
+app.layout = page_container
+
 ### Index Page Layout ###
 index_layout = html.Div(
     children=[
@@ -36,9 +39,6 @@ index_layout = html.Div(
         ),
     ]
 )
-
-### Set app layout to page container ###
-app.layout = page_container
 
 ### Assemble all layouts ###
 app.validation_layout = html.Div(
@@ -62,7 +62,6 @@ app.validation_layout = html.Div(
         )]
 )
 def display_page(pathname):
-    # add if index page
     if pathname == '/':
         return index_layout
     elif pathname == '/page-1':
